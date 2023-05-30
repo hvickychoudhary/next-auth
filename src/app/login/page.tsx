@@ -1,16 +1,20 @@
 "use client";
 
-import { Box, Button, Flex, Link, Text } from "@chakra-ui/react";
-import { getSession, useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { EmailIcon } from "@chakra-ui/icons";
+import { FcGoogle } from "react-icons/fc";
+import {
+  Box,
+  Button,
+  Divider,
+  Flex,
+  Heading,
+  Input,
+  Link,
+  Text,
+} from "@chakra-ui/react";
+import { signIn } from "next-auth/react";
 
-export default function Home() {
-  const { data: session } = useSession();
-  useEffect(() => {
-    /* Temporary fix  */
-    /* Next Router is causing issues. */
-    // if (!session) window.location.href = "http://localhost:3000/login";
-  }, [session]);
+export default function Login() {
   console.log(
     "The '/' route is public but '/chat' should be private & redirect the user to '/' if not logged in."
   );
@@ -21,17 +25,12 @@ export default function Home() {
       justifyContent={"space-between"}
       height={"100vh"}
       gap={"10px"}
+      p={"5"}
     >
-      <Box></Box>
-      <Flex
-        flexDirection={"column"}
-        alignItems={"center"}
-        justifyContent={"center"}
-        gap={"10px"}
-      >
+      <Box>
         <svg
-          width="41"
-          height="41"
+          width="31"
+          height="31"
           viewBox="0 0 41 41"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -46,16 +45,55 @@ export default function Home() {
             fill="currentColor"
           ></path>
         </svg>
-        <Text>Welcome to ChatGPT</Text>
-        <Text>Log in with your OpenAI account to continue</Text>
-        <Flex alignItems={"center"} justifyContent={"center"} gap={"10px"}>
-          <Button colorScheme={"green"} fontWeight={"light"} cursor={"grab"}>
-            Log in
-          </Button>
-          <Button colorScheme={"green"} fontWeight={"light"}>
-            Sign up
-          </Button>
-        </Flex>
+      </Box>
+      <Flex
+        flexDirection={"column"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        gap={"10px"}
+      >
+        <Heading fontWeight={"semibold"}>Welcome back</Heading>
+        <Input
+          placeholder="Email address"
+          size={"lg"}
+          rounded={"sm"}
+          disabled
+        ></Input>
+        <Button
+          colorScheme={"green"}
+          fontWeight={"light"}
+          cursor={"grab"}
+          size={"lg"}
+          width={"full"}
+          rounded={"sm"}
+        >
+          Continute
+        </Button>
+        <Text fontSize={"sm"}>
+          Don't have an account? <Link color={"green.400"}>Sign up</Link>
+        </Text>
+        <Box display={"flex"} width={"100%"} alignItems={"center"}>
+          <Divider />
+          <Text padding="2" fontSize={"xs"}>
+            OR
+          </Text>
+          <Divider />
+        </Box>
+        <Button
+          textAlign={"left"}
+          leftIcon={<FcGoogle />}
+          variant="outline"
+          colorScheme={"gray"}
+          fontWeight={"light"}
+          cursor={"grab"}
+          size={"lg"}
+          width={"full"}
+          rounded={"sm"}
+          fontSize={"lg"}
+          onClick={() => signIn()}
+        >
+          Continue with Google
+        </Button>
       </Flex>
       <Flex gap={"5px"} fontSize={"xs"} mb={"10px"}>
         <Link href="#">Terms of use</Link>
@@ -65,18 +103,3 @@ export default function Home() {
     </Flex>
   );
 }
-
-Home.getServerSideProps = async ({ req, res }) => {
-  const session = await getSession({ req });
-
-  console.log(session);
-
-  if (!session) {
-    res.writeHead(302, { Location: "/chat" });
-    res.end();
-  }
-
-  return {
-    props: {},
-  };
-};
