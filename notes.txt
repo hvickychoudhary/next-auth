@@ -1,0 +1,3 @@
+1. Was getting ts error in `/next-auth/src/app/api/auth/[...nextauth]/route.ts` because 'clientID' and 'clientSecret' accepts string but process.env.* can be either string or undefined. Remembering rust.
+
+2. 
